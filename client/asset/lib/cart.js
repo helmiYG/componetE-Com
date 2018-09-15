@@ -76,12 +76,13 @@ Vue.component('cart-cp', {
             loginAddress: '',
             loginPhone: '',
             totalPrice: 0,
+            msgScBuy: ''
         }
     },
 
     methods: {
         buy() {
-            this.carts.forEach(cart => {
+            this.cartsfromparent.carts.forEach(cart => {
                 axios({
                     method: 'PUT',
                     url: base_url + '/items/buy',
@@ -100,7 +101,9 @@ Vue.component('cart-cp', {
 
                     });
             });
-            this.carts = []
+            this.cartsfromparent.carts = []
+            this.msgScBuy = 'transaction succes'
+            this.$emit('sentscbuy', this.msgScBuy)
         },
         cancel(index) {
             let idItem = this.cartsfromparent.carts[index]._id

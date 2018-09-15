@@ -23,6 +23,7 @@
     <script src="./asset/lib/login.js"></script>
     <script src="./asset/lib/register.js"></script>
     <script src="./asset/lib/cart.js"></script>
+    <script src="./asset/lib/msgsc.js"></script>
 </head>
 
 <body>
@@ -30,12 +31,13 @@
         <!-- Navigation -->
         <navbar-cp v-bind:isloginfromparent="sentIsLogin" @islogout="getislogout" @stremovefromnavbar="getstremovefromnavbar" @stremoveregfromnavbar="getstremoveregfromnavbar" :getcartsfromparent="carts"></navbar-cp>
         
+        <msg-sc v-if="msgscbuy" :getmsgsc="msgscbuy"></msg-sc>
         <!-- Page Content -->
         <main-cp v-bind:isloginfromparent="sentIsLogin" v-bind:islogoutfromparent="sentIsLogout" @sentcartstoparent="getcartsfrommain" :getiditemfromparent="idItem"></main-cp>
 
       
         <!-- modal cart-->
-        <cart-cp :cartsfromparent="{carts, sentIsLogin}" @sentiditem="getiditemfromcart"></cart-cp>
+        <cart-cp :cartsfromparent="{carts, sentIsLogin}" @sentiditem="getiditemfromcart" @sentscbuy="getscbuy"></cart-cp>
 
         <!-- modal login -->
             <login-cp @islogin="getIsLogin" v-bind:getstremovefromparent="stRemove"></login-cp>
@@ -152,7 +154,8 @@
                 stRemove: '',
                 stRemoveReg: '',
                 carts: [],
-                idItem: ''
+                idItem: '',
+                msgscbuy: ''
             },
             methods: {
                
@@ -204,6 +207,10 @@
 
                 getiditemfromcart(value){
                     this.idItem = value
+                },
+
+                getscbuy(value){
+                    this.msgscbuy = value
                 }
             },
             
