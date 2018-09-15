@@ -1,8 +1,8 @@
 Vue.component('main-cp',{
     template: 
     `
-    <div class="row">
-    
+    <div class="container">
+        <div class="row">
             <div class="col-lg-3">
 
            <!-- ===============CATEGORY=========== -->
@@ -16,14 +16,14 @@ Vue.component('main-cp',{
 
             <div class="col-lg-9">
                 <carousel-cp></carousel-cp>
-                <card-cp v-bind:cardProps="{itemToShow, token}"></card-cp>
+                <card-cp v-bind:cardProps="{itemToShow, token}" @sentcarttomain="getcartfromcard"></card-cp>
             </div>
             <!-- /.col-lg-9 -->
 
         </div>
-
+    </div>
     `,
-
+    props: ['isloginfromparent', 'islogoutfromparent', 'getiditemfromparent'],
     data(){
         return {
             items: [],
@@ -49,6 +49,7 @@ Vue.component('main-cp',{
             max: '',
             msgPush: '',
             showJacketFirst: null,
+            carts: []
         }
     },
     methods: {
@@ -59,6 +60,10 @@ Vue.component('main-cp',{
         addToShow(itemToShow){
             this.itemToShow = itemToShow
         },
+
+        getcartfromcard(value){
+            this.carts = value
+        }
 
         
     },
@@ -96,7 +101,25 @@ Vue.component('main-cp',{
             .catch((err) => {
                 console.log(err);
             });
-
-
     },
+    watch: {
+        isloginfromparent(){
+            this.token = true
+        },
+        islogoutfromparent(){
+            this.token = false
+        },
+
+        carts(){
+            this.$emit('sentcartstoparent', this.carts)
+        },
+
+        getiditemfromparent(){
+             this.items.forEach(item => {
+                if (item._id == this.getiditemfromparent) {
+                    item.stock += 1
+                }
+            });
+        }
+    }
 })

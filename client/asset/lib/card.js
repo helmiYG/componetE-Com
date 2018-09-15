@@ -29,5 +29,34 @@ Vue.component('card-cp', {
         </div>
     `,
 
-    props: ['cardProps']
+    props: ['cardProps'],
+    data(){
+        return{
+            carts: []
+        }
+    },
+    methods: {
+        pushToCart(item) {
+            this.totalPrice = 0
+            item.qty = this.qty
+            item.subTotal = this.price
+            this.carts.push(item)
+            this.carts.forEach((cart, index) => {
+                if (index == this.carts.length - 1) {
+                    cart.stock -= 1
+                }
+            });
+            this.carts.forEach(cart => {
+                this.totalPrice += cart.price
+            });
+            
+        },
+    },
+    watch: {
+        carts(){
+            this.$emit('sentcarttomain', this.carts)
+            
+        }
+    }
+   
 })
