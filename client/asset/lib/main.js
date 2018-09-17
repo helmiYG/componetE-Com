@@ -37,7 +37,7 @@ Vue.component('main-cp',{
             password: '',
             isLogin: false,
             isLogout: false,
-            token: false,
+            token: '',
             isReg: '',
             msgErr: [],
             msgSc: '',

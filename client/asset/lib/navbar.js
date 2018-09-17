@@ -10,6 +10,9 @@ Vue.component('navbar-cp',{
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
+                    <li class="nav-item" v-if="token">
+                        <a class="nav-link" href="#history" data-toggle="modal" data-target="#history" @click="getHistory">Transction History</a>
+                    </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
                     <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"> -->
@@ -34,9 +37,10 @@ Vue.component('navbar-cp',{
             token: false,
             msgErr: [],
             removeErr: '',
-            isLogout: '',
+            isLogout: false,
             stRemoveLogin: true,
             stRemoveRegister: true,
+            isHistory: true
         }
     },
     methods: {
@@ -51,7 +55,12 @@ Vue.component('navbar-cp',{
         },
 
         logout(){
-            this.isLogout = localStorage.getItem('token')
+            console.log('ini is logout',this.isLogout);
+            if (this.isLogout) {
+                this.isLogout = false
+            } else {
+                this.isLogout = true
+            }
             localStorage.clear()
         },
 
@@ -64,6 +73,16 @@ Vue.component('navbar-cp',{
                 this.stRemoveRegister = true
             }
         },
+
+        getHistory(){
+            if (this.isHistory) {
+                this.$emit('sentishistory', this.isHistory)
+                this.isHistory = false
+            }else{
+                this.$emit('sentishistory', this.isHistory)
+                this.isHistory = true
+            }
+        }
     },
     watch: {
         isloginfromparent(){
@@ -71,7 +90,11 @@ Vue.component('navbar-cp',{
         },
 
         isLogout(){
+            console.log('ini token navbar untuk ogout',this.token);
+            
             this.token = false
+            console.log('ini token navbar untuk ogout',this.token);
+            
             this.$emit('islogout', this.token)
         },
     }

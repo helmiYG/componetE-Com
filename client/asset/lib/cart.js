@@ -1,7 +1,7 @@
 Vue.component('cart-cp', {
-    template: 
+    template:
 
-    `
+        `
     <div class="modal fade" id="cart" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -70,8 +70,8 @@ Vue.component('cart-cp', {
     </div>
     `,
     props: ['cartsfromparent'],
-    data(){
-        return{
+    data() {
+        return {
             loginName: '',
             loginAddress: '',
             loginPhone: '',
@@ -93,17 +93,38 @@ Vue.component('cart-cp', {
                         id: cart._id
                     }
                 })
-                    .then((result) => {
-                        console.log(result);
+                    .then(() => {
+                       
                     })
                     .catch((err) => {
                         console.log(err);
 
                     });
             });
+            
+            axios({
+                method: 'POST',
+                url: base_url + '/transactions',
+                headers: {
+                    token: localStorage.getItem('token')
+                },
+                data: {
+                    itemCart: this.cartsfromparent.carts,
+                    totalPrice: this.totalPrice
+                }
+            })
+                .then(() => {
+                 
+                })
+                .catch((err) => {
+                    console.log(err);
+
+                });
+                this.msgScBuy = 'transaction succes'
+                this.$emit('sentscbuy', this.msgScBuy)
             this.cartsfromparent.carts = []
-            this.msgScBuy = 'transaction succes'
-            this.$emit('sentscbuy', this.msgScBuy)
+            this.$emit('setnullcart', this.cartsfromparent.carts)
+           
         },
         cancel(index) {
             let idItem = this.cartsfromparent.carts[index]._id
@@ -112,10 +133,10 @@ Vue.component('cart-cp', {
             this.cartsfromparent.carts.splice(index, 1)
         },
 
-        
+
     },
     watch: {
-        cartsfromparent(){
+        cartsfromparent() {
             this.loginName = localStorage.getItem('loginName')
             this.loginAddress = localStorage.getItem('loginAddress')
             this.loginPhone = localStorage.getItem('loginPhone')

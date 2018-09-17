@@ -17,9 +17,9 @@ Vue.component('card-cp', {
                         <h5> Price: {{item.price}} </h5>
                         <p class="card-text"> Stock: {{item.stock}} </p>
                         <button class="btn btn-dark my-2 my-sm-0 btn-sm" type="button" v-on:click="pushToCart(item)"
-                            v-if="cardProps.token & item.stock > 0">Add To Cart</button>
+                            v-if="cardProps.token && item.stock > 0">Add To Cart</button>
                         <button class="btn btn-dark my-2 my-sm-0 btn-sm" type="button" disabled v-on:click="pushToCart(item)"
-                            v-else-if="cardProps.token & item.stock < 1">Add To Cart</button>
+                            v-else-if="cardProps.token && item.stock < 1">Add To Cart</button>
                     </div>
                     <div class="card-footer">
                         <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
@@ -38,8 +38,8 @@ Vue.component('card-cp', {
     methods: {
         pushToCart(item) {
             this.totalPrice = 0
-            item.qty = this.qty
-            item.subTotal = this.price
+            item.qty = 1
+            item.subTotal = item.price
             this.carts.push(item)
             this.carts.forEach((cart, index) => {
                 if (index == this.carts.length - 1) {
@@ -49,13 +49,17 @@ Vue.component('card-cp', {
             this.carts.forEach(cart => {
                 this.totalPrice += cart.price
             });
-            
         },
     },
     watch: {
         carts(){
             this.$emit('sentcarttomain', this.carts)
+        },
+
+        cardProps(){
+            console.log('iniiiiiiiiiiiii',this.cardProps);
             
+            this.cardProps
         }
     }
    

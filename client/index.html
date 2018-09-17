@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>E-Commerce</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
     <link rel="stylesheet" href="./asset/css/index.css">
@@ -24,96 +24,33 @@
     <script src="./asset/lib/register.js"></script>
     <script src="./asset/lib/cart.js"></script>
     <script src="./asset/lib/msgsc.js"></script>
+    <script src="./asset/lib/history.js"></script>
 </head>
 
 <body>
     <div id="app">
         <!-- Navigation -->
-        <navbar-cp v-bind:isloginfromparent="sentIsLogin" @islogout="getislogout" @stremovefromnavbar="getstremovefromnavbar" @stremoveregfromnavbar="getstremoveregfromnavbar" :getcartsfromparent="carts"></navbar-cp>
+        <navbar-cp v-bind:isloginfromparent="sentIsLogin" @islogout="getislogout" @stremovefromnavbar="getstremovefromnavbar" @stremoveregfromnavbar="getstremoveregfromnavbar" :getcartsfromparent="carts" @sentishistory="gethistoryfromnavbar"></navbar-cp>
         
         <msg-sc v-if="msgscbuy" :getmsgsc="msgscbuy"></msg-sc>
         <!-- Page Content -->
-        <main-cp v-bind:isloginfromparent="sentIsLogin" v-bind:islogoutfromparent="sentIsLogout" @sentcartstoparent="getcartsfrommain" :getiditemfromparent="idItem"></main-cp>
+        <main-cp v-bind:isloginfromparent="sentIsLogin" v-bind:islogoutfromparent="sentIsLogoutForCard" @sentcartstoparent="getcartsfrommain" :getiditemfromparent="idItem"></main-cp>
 
       
         <!-- modal cart-->
-        <cart-cp :cartsfromparent="{carts, sentIsLogin}" @sentiditem="getiditemfromcart" @sentscbuy="getscbuy"></cart-cp>
+        <cart-cp :cartsfromparent="{carts, sentIsLogin}" @sentiditem="getiditemfromcart" @sentscbuy="getscbuy" @setnullcart="getsetnull"></cart-cp>
 
         <!-- modal login -->
             <login-cp @islogin="getIsLogin" v-bind:getstremovefromparent="stRemove"></login-cp>
         <!-- /modal login -->
+
+            <history-cp :gethistoryfromparent="isdataHistory"></history-cp>
 
         <!-- modal register -->
             <register-cp :getstremoveregfromparent="stRemoveReg"></register-cp>
        
         <!-- Footer -->
         <footer-cp></footer-cp>
-       
-
-
-
-          <!-- modal history -->
-
-          <!-- <div class="modal fade" id="history" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">My Cart</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <table class="table">
-                            <tr>
-                                <th scope="row">Name</th>
-                                <td> {{loginName}} </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Address</th>
-                                <td> {{loginAddress}} </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Phone</th>
-                                <td> {{loginPhone}} </td>
-                            </tr>
-                        </table>
-                        <div v-if="dataHistory.length < 1">
-                            <h3>You dont have transaction history</h3>
-                        </div>
-                        <table class="table" v-if="dataHistory.length > 0" v-for="(data, index) in dataHistory">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Items</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Qty</th>
-                                    <th scope="col">Total</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row"> {{index+1}} </th>
-                                    <td> {{data.itemCart}} 
-                                        <span v-for="item in data.itemCart">
-                                            <p> {{item}} </p>
-                                        </span>
-                                    </td>
-                                    <td> {{data.totalPrice}} </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="modal-footer" v-if="carts.length > 0">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="buy()">Submit</button>
-                        <p v-if="msgPush" style="color: green"> {{msgPush}} </p>
-                    </div>
-                </div>
-            </div>
-        </div>  -->
-    <!-- /modal history -->
 
     </div>
 
@@ -129,25 +66,6 @@
         var app = new Vue({
             el: '#app',
             data: {
-                items: [],
-                itemToShow: [],
-                carts: [],
-                totalPrice: 0,
-               
-                isLogin: false,
-                isLogout: false,
-                token: false,
-                isReg: '',
-               
-                stLogin: '',
-                loginName: '',
-                loginAddress: '',
-                loginPhone: '',
-                msgPush: '',
-                dataHistory: [],
-
-
-
                 sentIsLogin: '',
                 isToken: '',
                 sentIsLogout: '',
@@ -155,42 +73,29 @@
                 stRemoveReg: '',
                 carts: [],
                 idItem: '',
-                msgscbuy: ''
+                msgscbuy: '',
+                isdataHistory: '',
+                sentIsLogoutForCard: false
+
             },
             methods: {
-               
-
-               
-
-               
-
-              
-                history(){
-                    axios({
-                        method: 'GET',
-                        url: base_url +'/transactions',
-                        headers: {
-                            token: localStorage.getItem('token')
-                        }
-                    })
-                    .then((result) => {
-                        this.dataHistory = result.data
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        
-                    });
+                getsetnull(value){
+                    this.carts = value
                 },
-
-
-
-
+               gethistoryfromnavbar(value){
+                   this.isdataHistory = value
+               },
                 getIsLogin(value){
                     this.sentIsLogin = value
                 },
 
                 getislogout(value){
-                    this.sentIsLogout = value
+                    // this.sentIsLogout = value
+                    if (this.sentIsLogoutForCard) {
+                        this.sentIsLogoutForCard = false
+                    } else {
+                        this.sentIsLogoutForCard = true
+                    }
                 },
 
                 getstremovefromnavbar(value){
