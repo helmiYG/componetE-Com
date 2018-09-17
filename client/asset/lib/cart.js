@@ -76,7 +76,7 @@ Vue.component('cart-cp', {
             loginAddress: '',
             loginPhone: '',
             totalPrice: 0,
-            msgScBuy: ''
+            msgScBuy: true
         }
     },
 
@@ -122,6 +122,11 @@ Vue.component('cart-cp', {
                 });
                 this.msgScBuy = 'transaction succes'
                 this.$emit('sentscbuy', this.msgScBuy)
+                // if(this.msgScBuy){
+                //     this.msgScBuy = false
+                // } else {
+                //     this.msgScBuy = true
+                // }
             this.cartsfromparent.carts = []
             this.$emit('setnullcart', this.cartsfromparent.carts)
            
@@ -144,6 +149,12 @@ Vue.component('cart-cp', {
             this.cartsfromparent.carts.map(cart => {
                 this.totalPrice += cart.price
             })
+        },
+
+        watch: {
+            msgScBuy(){
+                this.$emit('sentscbuy', this.msgScBuy)
+            }
         }
     }
 })

@@ -34,9 +34,8 @@
         
         <msg-sc v-if="msgscbuy" :getmsgsc="msgscbuy"></msg-sc>
         <!-- Page Content -->
-        <main-cp v-bind:isloginfromparent="sentIsLogin" v-bind:islogoutfromparent="sentIsLogoutForCard" @sentcartstoparent="getcartsfrommain" :getiditemfromparent="idItem"></main-cp>
-
-      
+        <main-cp v-bind:isloginfromparent="sentIsLogin" v-bind:islogoutfromparent="sentIsLogoutForCard" @sentcartstoparent="getcartsfrommain" :getiditemfromparent="idItem" :setnullfromparent="setnull"></main-cp>
+    
         <!-- modal cart-->
         <cart-cp :cartsfromparent="{carts, sentIsLogin}" @sentiditem="getiditemfromcart" @sentscbuy="getscbuy" @setnullcart="getsetnull"></cart-cp>
 
@@ -75,12 +74,19 @@
                 idItem: '',
                 msgscbuy: '',
                 isdataHistory: '',
-                sentIsLogoutForCard: false
+                sentIsLogoutForCard: false,
+                setnull: true
 
             },
             methods: {
                 getsetnull(value){
                     this.carts = value
+
+                    if(this.setnull){
+                        this.setnull = false
+                    } else{
+                        this.setnull = true
+                    }
                 },
                gethistoryfromnavbar(value){
                    this.isdataHistory = value
@@ -125,6 +131,7 @@
                     this.sentIsLogin = this.isToken
                 }
             },
+
         })
     </script>
 </body>

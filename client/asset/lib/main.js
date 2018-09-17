@@ -16,14 +16,14 @@ Vue.component('main-cp',{
 
             <div class="col-lg-9">
                 <carousel-cp></carousel-cp>
-                <card-cp v-bind:cardProps="{itemToShow, token}" @sentcarttomain="getcartfromcard"></card-cp>
+                <card-cp v-bind:cardProps="{itemToShow, token}" @sentcarttomain="getcartfromcard" :setnullfrommain="setnull"></card-cp>
             </div>
             <!-- /.col-lg-9 -->
 
         </div>
     </div>
     `,
-    props: ['isloginfromparent', 'islogoutfromparent', 'getiditemfromparent'],
+    props: ['isloginfromparent', 'islogoutfromparent', 'getiditemfromparent', 'setnullfromparent'],
     data(){
         return {
             items: [],
@@ -49,7 +49,8 @@ Vue.component('main-cp',{
             max: '',
             msgPush: '',
             showJacketFirst: null,
-            carts: []
+            carts: [],
+            setnull: false
         }
     },
     methods: {
@@ -120,6 +121,14 @@ Vue.component('main-cp',{
                     item.stock += 1
                 }
             });
+        },
+
+        setnullfromparent(){
+            if (this.setnull) {
+                this.setnull = false
+            } else {
+                this.setnull = true
+            }
         }
     }
 })

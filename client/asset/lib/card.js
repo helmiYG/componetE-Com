@@ -29,7 +29,7 @@ Vue.component('card-cp', {
         </div>
     `,
 
-    props: ['cardProps'],
+    props: ['cardProps', 'setnullfrommain'],
     data(){
         return{
             carts: []
@@ -60,6 +60,10 @@ Vue.component('card-cp', {
             console.log('iniiiiiiiiiiiii',this.cardProps);
             
             this.cardProps
+        },
+
+        setnullfrommain(){
+            this.carts = []
         }
     }
    
